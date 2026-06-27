@@ -1,0 +1,62 @@
+<?php
+namespace {{ namespace }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+
+// for controller output
+use Illuminate\Http\{
+	JsonResponse,
+	RedirectResponse,
+	Response
+};
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
+
+// models
+// use {{ namespacedModel }};
+
+// load validation
+use Illuminate\Http\Request;;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
+// load db facade
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+
+// load batch and queue
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
+
+// load email & notification
+use Illuminate\Support\Facades\{
+	Mail, Notification
+};
+
+// load helper
+use Illuminate\Support\{
+	Arr, Str, Collection, Facades\Storage
+};
+
+// load Carbon library
+use \Carbon\{
+	Carbon, CarbonPeriod, CarbonInterval
+};
+
+use Session;
+use Throwable;
+use Exception;
+use Log;
+
+// load pdf
+// use Barryvdh\DomPDF\Facade\Pdf;
+
+class {{ class }} extends Controller
+{
+	/**
+	 * Handle the incoming request.
+	 */
+	public function __invoke(Request $request)
+	{
+		//
+	}
+}

@@ -1,0 +1,12 @@
+window.data = {
+	route: {
+		get{{ class }}: '{{ route('get{{ class }}') }}',
+	},
+	url: {
+		{{ modelVariable }}: '{{ url('{{ modelVariable }}') }}',
+	},
+	old: {
+		var_id: @json(old('var_id', @$var->var_id)),
+	},
+	errors: @json($errors->toArray()),
+};

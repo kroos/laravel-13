@@ -1,0 +1,156 @@
+const { route, url, old, errors } = window.data;
+function getError(name) {
+	return errors[name] ? errors[name][0] : null;
+}
+
+// $( "#date" ).datepicker({
+// 	...config.datepicker,
+// });
+
+// radio/checkbox
+// function populateCheckbox(gItems = 0) {
+// 	$.ajax({
+// 		url: route.get{{ class }},
+// 		dataType: 'json',
+// 		type: "POST",
+// 		success: function (response) {
+//
+// 			const $checkbox = $("#gar");
+// 			if($checkbox.length > 0) $checkbox.empty();
+//
+// 			response.forEach(function(value, j) {
+// 				const checkboxId = `jan${j}`;
+//
+// 				// If found, mark checked
+// 				let isChecked = (gItems == value.id) ? 'checked' : '';
+//
+// 				let row = `
+// 					<input
+// 					 type="radio"
+// 					 id="${checkboxId}"
+// 					 name="var_id"
+// 					 class="btn-check"
+// 					 value="${value.id}"
+// 					 ${isChecked}
+// 					>
+// 					<label
+// 					 class="btn btn-outline-primary"
+// 					 for="${checkboxId}"
+// 					>
+// 					${value.var}
+// 					</label>
+// 				`;
+// 				$checkbox.append(row);
+// 			});
+//
+// 		},
+// 		error: function (jqXHR, textStatus, errorThrown) {
+// 		}
+// 	});
+// }
+// populateCheckbox(old.var_id);
+
+// $(`#var_id`).select2({
+// 	...config.select2,
+// 	ajax: {
+// 		url: route.get{{ class }},
+// 		type: 'POST',
+// 		dataType: 'json',
+// 		delay: 250,											// Delay to reduce server requests
+// 		data: function (params) {
+// 			return {
+// 				search: params.term,				// Search query
+// 			}
+// 		},
+// 		processResults: function (data) {
+// 			return {
+// 				results: data.map(function (data) {
+// 					return {
+// 						id: data.id,
+// 						text: data.status,
+// 					}
+// 				})
+// 			};
+// 		}
+//
+// 	},
+// });
+// if(old.var_id){
+// 	$.ajax({
+// 		url: route.get{{ class }},
+// 		type: 'POST',
+// 		dataType: 'json',
+// 		data: {
+// 			id: old.var_id,
+// 		},
+// 	}).then(data => {
+// 		const option = new Option(
+// 												data[0].status,
+// 												data[0].id,
+// 												true,
+// 												true
+// 											);
+// 		$('#var_id').append(option).trigger('change');
+// 	});
+// }
+
+/* dynamic rows */
+// $("#gsm_wrap").addRemRow({
+// 	addBtn: "#gsm_add",
+// 	startRow: 0,
+// 	maxRows: 200,
+// 	removeClass: "gsm_remove",
+// 	rowSelector: 'rowgsm',
+// 	fieldName: "gsm",
+// 	/* SweetAlert2 and AJAX full option */
+// 	swal: {
+// 		options: {
+// 			...config.swal,
+// 		},
+// 		ajax: {
+// 			url: url.{{ variable }},
+// 			method: 'DELETE',
+// 			dataType: 'json',
+// 			data: {
+// 			}
+// 		}
+// 	},
+// 	rowTemplate: (i, name) => `
+// 		<div id="rowgsm_${i}" class="rowgsm col-sm-12 m-0 my-1 border border-primary rounded">
+// 			<div class="col-sm-12 row my-2 px-1">
+//
+// 				<div class="form-group col-sm-3 m-0 ${getError(`${name}.${i}.var`) ? 'has-error' : ''}">
+// 					<label for="mm_${i}" class="col-form-label ">Label : </label>
+// 					<input type="text" name="${name}[${i}][var]" id="mm_${i}" class="form-control // form-control-sm ${getError(`${name}.${i}.var`) ? 'is-invalid' : ''}" placeholder="Label">
+// 					${getError(`${name}.${i}.var`) ? `
+// 					<div class="invalid-feedback">
+// 						${getError(`${name}.${i}.var`)}
+// 					</div>
+// 					` : ''}
+// 				</div>
+//
+// 				<div class="col-sm-1 my-auto m-0">
+// 					<input type="hidden" name="${name}[${i}][id]">
+// 					<button type="button" class="btn btn-sm btn-outline-danger gsm_remove" data-id="${i}">
+// 						<i class="fa-solid fa-trash-can"></i>
+// 					</button>
+// 				</div>
+//
+// 			</div>
+// 		</div>
+// 	`,
+// 	onAdd: (i, e, $r, name) => {
+// 	},
+// 	onRemove: async (i, event, $row, name) => {
+// 	},
+// });
+
+// if (old.gsmitems.length > 0) {
+// 	old.gsmitems.forEach(function (smi, i) {
+// 		$("#gsm_add").trigger('click');
+// 		const $row = $(".rowgsm").last();
+//
+// 		$row.find(`[name="gsm[${i}][id]"]`).val(smi.id || '');
+// 		$row.find(`[name="gsm[${i}][markah_mula]"]`).val(smi.var || '');
+// 	});
+// }

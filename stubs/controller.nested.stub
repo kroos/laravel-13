@@ -1,0 +1,111 @@
+<?php
+namespace {{ namespace }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+
+// for controller output
+use Illuminate\Http\{
+	JsonResponse,
+	RedirectResponse,
+	Response
+};
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
+
+// models
+use {{ namespacedParentModel }};
+use {{ namespacedModel }};
+
+// load validation
+use {{ namespacedRequests }};
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
+// load db facade
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+
+// load batch and queue
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
+
+// load email & notification
+use Illuminate\Support\Facades\{
+	Mail, Notification
+};
+
+// load helper
+use Illuminate\Support\{
+	Arr, Str, Collection, Facades\Storage
+};
+
+// load Carbon library
+use \Carbon\{
+	Carbon, CarbonPeriod, CarbonInterval
+};
+
+use Session;
+use Throwable;
+use Exception;
+use Log;
+
+// load pdf
+// use Barryvdh\DomPDF\Facade\Pdf;
+
+class {{ class }} extends Controller
+{
+	/**
+	 * Display a listing of the resource.
+	 */
+	public function index({{ parentModel }} ${{ parentModelVariable }})
+	{
+		//
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 */
+	public function create({{ parentModel }} ${{ parentModelVariable }})
+	{
+		//
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 */
+	public function store(Request $request, {{ parentModel }} ${{ parentModelVariable }})
+	{
+		//
+	}
+
+	/**
+	 * Display the specified resource.
+	 */
+	public function show({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
+	{
+		//
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 */
+	public function edit({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
+	{
+		//
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 */
+	public function update(Request $request, {{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
+	{
+		//
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 */
+	public function destroy({{ parentModel }} ${{ parentModelVariable }}, {{ model }} ${{ modelVariable }})
+	{
+		//
+	}
+}

@@ -1,0 +1,124 @@
+@import "../css/tailwind.css"; // Import Tailwind into SCSS
+
+// @import "../../node_modules/bootstrap/scss/bootstrap-grid.scss";
+// @import "../../node_modules/bootstrap/scss/bootstrap-reboot.scss";
+// @import "../../node_modules/bootstrap/scss/bootstrap-utilities.scss";
+
+// 1. Required Bootstrap core
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/maps";
+@import "../../node_modules/bootstrap/scss/utilities";
+
+// 2. Base colors
+$base-colors: (
+  "blue": $blue,
+  "indigo": $indigo,
+  "purple": $purple,
+  "pink": $pink,
+  "red": $red,
+  "orange": $orange,
+  "yellow": $yellow,
+  "green": $green,
+  "teal": $teal,
+  "cyan": $cyan,
+  "black": $black,
+  "white": $white,
+  "gray": $gray-600,
+  "gray-dark": $gray-800
+);
+
+// 3. Add base colors to Bootstrap buttons (IMPORTANT)
+$theme-colors: map-merge($theme-colors, $base-colors);
+
+// 4. Function to generate shades
+@function generate-shades($color) {
+  @return (
+    100: tint-color($color, 80%),
+    200: tint-color($color, 60%),
+    300: tint-color($color, 40%),
+    400: tint-color($color, 20%),
+    500: $color,
+    600: shade-color($color, 20%),
+    700: shade-color($color, 40%),
+    800: shade-color($color, 60%),
+    900: shade-color($color, 80%)
+  );
+}
+
+// 5. Build full color palette
+$all-colors: ();
+
+@each $name, $color in $base-colors {
+
+  // ✅ include base color (for bg-red, btn-red)
+  $all-colors: map-merge(
+    $all-colors,
+    (
+      "#{$name}": $color
+    )
+  );
+
+  // ✅ generate shades
+  $shades: generate-shades($color);
+
+  @each $level, $value in $shades {
+    $all-colors: map-merge(
+      $all-colors,
+      (
+        "#{$name}-#{$level}": $value
+      )
+    );
+  }
+}
+
+// 6. Extend Bootstrap utilities (CORRECT way)
+$utilities: map-merge(
+  $utilities,
+  (
+    "color": map-merge(
+      map-get($utilities, "color"),
+      (
+        values: map-merge(
+          map-get(map-get($utilities, "color"), "values"),
+          $all-colors
+        )
+      )
+    ),
+
+    "background-color": map-merge(
+      map-get($utilities, "background-color"),
+      (
+        values: map-merge(
+          map-get(map-get($utilities, "background-color"), "values"),
+          $all-colors
+        )
+      )
+    ),
+
+    "border-color": map-merge(
+      map-get($utilities, "border-color"),
+      (
+        values: map-merge(
+          map-get(map-get($utilities, "border-color"), "values"),
+          $all-colors
+        )
+      )
+    )
+  )
+);
+
+// 7. Import Bootstrap (so mixins like button-variant exist)
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// 8. Generate FULL button system (base + shades)
+@each $name, $value in $all-colors {
+
+  .btn-#{$name} {
+    @include button-variant($value, $value);
+  }
+
+  .btn-outline-#{$name} {
+    @include button-outline-variant($value);
+  }
+}

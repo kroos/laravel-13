@@ -1,0 +1,33 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="col-sm-12 d-flex flex-column justify-content-center align-items-center my-2 m-0">
+
+	<form method="POST" action="{{ route('{{ modelVariable }}.store') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+		@csrf
+
+		<div class="card">
+			<div class="card-header d-flex justify-content-between">
+				<h3 class="my-auto">Create {{ class }}</h3>
+			</div>
+			<div class="card-body">
+				@include('{{ viewVariable }}._form')
+			</div>
+			<div class="card-footer d-flex justify-content-end">
+				<button type="submit" class="my-auto btn btn-sm btn-outline-primary me-1">
+					<i class="fa-regular fa-floppy-disk"></i> Submit
+				</button>
+				<a href="{{ route('{{ modelVariable }}.index') }}" class="my-auto btn btn-sm btn-outline-secondary me-1">
+					<i class="fa-solid fa-delete-left"></i> Cancel
+				</a>
+			</div>
+		</div>
+
+	</form>
+
+</div>
+@endsection
+
+@section('js')
+@include('{{ viewVariable }}._js')
+@endsection
