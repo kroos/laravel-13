@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class MakeModule extends Command
+class MakeControl extends Command
 {
 	/**
 	 * The name and signature of the console command.
@@ -14,7 +14,11 @@ class MakeModule extends Command
 	 * @var string
 	 */
 	// protected $signature = 'app:make-module';
-	protected $signature = 'make:module {name}';
+	protected $signature = '
+		make:control
+		{name}
+		{--m|model= : Model class, e.g. Process\GerabahProcess}
+	';
 
 
 	/**
@@ -23,13 +27,32 @@ class MakeModule extends Command
 	 * @var string
 	 */
 	// protected $description = 'Command description';
-	protected $description = 'Generate a full module (model, controller, requests, policy, resource)';
+	protected $description = 'Generate a full module (controller, requests)';
 
 	/**
 	 * Execute the console command.
 	 */
 	public function handle()
 	{
+		$model = $this->option('model');
+
+		$modelClass = null;
+		$modelNamespace = null;
+		$modelVariable = null;
+		$viewVariable = null;
+
+		if ($model) {
+			$modelClass = class_basename($model);
+			$modelNamespace = Str::beforeLast($model, '\\');
+
+			if ($modelNamespace === $model) {
+				$modelNamespace = '';
+			}
+
+			$modelVariable = Str::camel($modelClass);
+			$viewVariable = Str::kebab($modelClass);
+		}
+
 		$name = $this->argument('name');
 		$class = class_basename($name);
 
@@ -62,13 +85,13 @@ class MakeModule extends Command
 // $modulePath
 // );
 
-		$this->writeFile(
-			app_path("Models/{$folder}/{$class}.php"),
-			$this->buildStub('model.stub', [
-				'namespace' => "App\\Models\\{$folder}",
-				'class' => $class,
-			])
-		);
+		// $this->writeFile(
+		// 	app_path("Models/{$folder}/{$class}.php"),
+		// 	$this->buildStub('model.stub', [
+		// 		'namespace' => "App\\Models\\{$folder}",
+		// 		'class' => $class,
+		// 	])
+		// );
 
 		// $this->call('make:model', [
 		// 	'name' => $name,
@@ -81,10 +104,10 @@ class MakeModule extends Command
 				'namespace' => "App\\Http\\Controllers\\{$folder}",
 				'requestNamespace' => $folder,
 				'resourceNamespace' => $folder,
-				'modelNamespace' => $folder,
+				'modelNamespace' => $modelNamespace,
+				'modelClass' => $modelClass,
 				'controllerClass' => $class,
-				'modelClass' => $class,
-				'modelVariable' => Str::camel($class),
+				'modelVariable' => Str::camel($modelClass),
 				'viewVariable' => Str::kebab($class),
 			])
 		);
@@ -101,8 +124,8 @@ class MakeModule extends Command
 				'namespace' => "App\\Http\\Requests\\{$folder}",
 				'namespacemodel' => $folder,
 				'class' => $class,
-				'modelNamespace' => $folder,
-				'modelClass' => $class,
+				'modelNamespace' => $modelNamespace,
+				'modelClass' => $modelClass,
 			])
 		);
 
@@ -112,8 +135,8 @@ class MakeModule extends Command
 				'namespace' => "App\\Http\\Requests\\{$folder}",
 				'namespacemodel' => $folder,
 				'class' => $class,
-				'modelNamespace' => $folder,
-				'modelClass' => $class,
+				'modelNamespace' => $modelNamespace,
+				'modelClass' => $modelClass,
 			])
 		);
 
@@ -152,11 +175,11 @@ class MakeModule extends Command
 		// 	])
 		// );
 
-		$this->call('make:migration', [
-			'name' => 'create_' .
-			Str::snake(Str::pluralStudly($class)) .
-			'_table'
-		]);
+		// $this->call('make:migration', [
+		// 	'name' => 'create_' .
+		// 	Str::snake(Str::pluralStudly($class)) .
+		// 	'_table'
+		// ]);
 
 		/* View Files */
 		$this->writeFile(

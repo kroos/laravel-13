@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 use App\Models\{
-	{{ namespacemodel }}\{{ class }},
+	{{ modelNamespace }}\{{ modelClass }},
 };
 
 class Store{{ class }}Request extends FormRequest

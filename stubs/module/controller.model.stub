@@ -13,20 +13,20 @@ use Illuminate\View\View;
 
 // models
 use App\Models\{
-	{{ modelNamespace }}\{{ class }}
+	{{ modelNamespace }}\{{ modelClass }},
 };
 
 // load request
 use Illuminate\Http\Request;
 use App\Http\Requests\{
-	{{ requestNamespace }}\Store{{ class }}Request,
-	{{ requestNamespace }}\Update{{ class }}Request,
+	{{ requestNamespace }}\Store{{ controllerClass }}Request,
+	{{ requestNamespace }}\Update{{ controllerClass }}Request,
 };
 // use Illuminate\Support\Facades\Validator;
 // use Illuminate\Validation\Rule;
 
 // resource
-// use App\Http\Resources\{{ resourceNamespace }}\{{ class }}Resource;
+// use App\Http\Resources\{{ resourceNamespace }}\{{ modelClass }}Resource;
 
 // load db facade
 // use Illuminate\Database\Eloquent\Builder;
@@ -59,7 +59,7 @@ use \Carbon\{
 // load pdf
 // use Barryvdh\DomPDF\Facade\Pdf;
 
-class {{ class }}Controller extends Controller
+class {{ controllerClass }}Controller extends Controller
 {
 	/**
 	 * Display a listing of the resource.
@@ -67,9 +67,6 @@ class {{ class }}Controller extends Controller
 	public function index(): View
 	{
 		return view('{{ viewVariable }}.index');
-		// return {{ class }}Resource::collection(
-		// 	{{ class }}::paginate()
-		// );
 	}
 
 	/**
@@ -83,13 +80,9 @@ class {{ class }}Controller extends Controller
 	/**
 	 * Store a newly created resource in storage.
 	 */
-	public function store(Store{{ class }}Request $request): RedirectResponse
+	public function store(Store{{ controllerClass }}Request $request): RedirectResponse
 	{
-		// $item = {{ class }}::create(
-		// 	$request->validated()
-		// );
-
-		$result = {{ class }}::create(
+		$result = {{ modelClass }}::create(
 			$request->except('_token')
 		);
 
@@ -98,22 +91,20 @@ class {{ class }}Controller extends Controller
 		);
 
 		return redirect()->route('{{ modelVariable }}.index')->with('success', 'Data Added');
-		// return new {{ class }}Resource($item);
 	}
 
 	/**
 	 * Display the specified resource.
 	 */
-	public function show({{ class }} ${{ modelVariable }}): View
+	public function show({{ modelClass }} ${{ modelVariable }}): View
 	{
 		return view('{{ viewVariable }}.show', ['var' => ${{ modelVariable }}]);
-		// return new {{ class }}Resource(${{ modelVariable }});
 	}
 
 	/**
 	 * Show the form for editing the specified resource.
 	 */
-	public function edit({{ class }} ${{ modelVariable }}): View
+	public function edit({{ modelClass }} ${{ modelVariable }}): View
 	{
 		return view('{{ viewVariable }}.edit', ['var' => ${{ modelVariable }}]);
 	}
@@ -122,14 +113,13 @@ class {{ class }}Controller extends Controller
 	 * Update the specified resource in storage.
 	 */
 	public function update(
-		Update{{ class }}Request $request,
-		{{ class }} ${{ modelVariable }}
+		Update{{ controllerClass }}Request $request,
+		{{ modelClass }} ${{ modelVariable }}
 	): RedirectResponse
 	{
 		// ${{ modelVariable }}->update(
 		// 	$request->validated()
 		// );
-
 
 		${{ modelVariable }}->update(
 			$request->except('_token', '_method')
@@ -143,14 +133,12 @@ class {{ class }}Controller extends Controller
 		}
 
 		return redirect()->route('{{ modelVariable }}.index')->with('success', 'Data Updated');
-		// return new {{ class }}Resource(${{ modelVariable }});
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 */
-	// public function destroy({{ class }} ${{ variable }}): JsonResponse
-	public function destroy({{ class }} ${{ modelVariable }}): JsonResponse
+	public function destroy({{ modelClass }} ${{ modelVariable }}): JsonResponse
 	{
 		${{ modelVariable }}->delete();
 		return response()->json([
