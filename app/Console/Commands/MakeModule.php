@@ -77,7 +77,7 @@ class MakeModule extends Command
 
 		$this->writeFile(
 			app_path("Http/Controllers/{$folder}/{$class}Controller.php"),
-			$this->buildStub('controller.model.stub', [
+			$this->buildStub('controller.stub', [
 				'namespace' => "App\\Http\\Controllers\\{$folder}",
 				'requestNamespace' => $folder,
 				'resourceNamespace' => $folder,
@@ -250,7 +250,7 @@ class MakeModule extends Command
 	protected function buildStub(string $stub, array $replace): string
 	{
 		$content = file_get_contents(
-			base_path("stubs/module/{$stub}")
+			base_path("stubs/module/resource/{$stub}")
 		);
 
 		foreach ($replace as $key => $value) {
@@ -275,6 +275,4 @@ class MakeModule extends Command
 
 		file_put_contents($path, $content);
 	}
-
-
 }
