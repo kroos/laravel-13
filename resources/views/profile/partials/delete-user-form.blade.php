@@ -1,8 +1,6 @@
-<h2>{{ __('Delete Account') }}</h2>
-
 <p>{{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}</p>
 
-<button type="button" class="btn btn-danger m-3" data-bs-toggle="modal" data-bs-target="#deuser">Delete Account</button>
+<button type="button" class="btn btn-outline-danger m-3" data-bs-toggle="modal" data-bs-target="#deuser">Delete Account</button>
 
 <!-- Modal -->
 <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="deuser" tabindex="-1" aria-labelledby="deleuser" aria-hidden="true">
@@ -10,7 +8,7 @@
 		<form method="post" action="{{ route('profile.destroy') }}" class="p-6">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="deleuser">Modal title</h1>
+					<h1 class="modal-title fs-5" id="deleuser">Delete Account</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">

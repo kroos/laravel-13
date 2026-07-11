@@ -10,7 +10,7 @@
 			</a>
 		</div>
 		<div class="card-body">
-			<h1 class="text-center">Error 403 : {{ $exception->getMessage() ?? 'Forbidden' }}</h1>
+			<h1 class="text-center">Error 403 : {{$exception->getMessage() ?: 'Forbidden' }}</h1>
 			<a href="{{ url('/dashboard') }}" class="">
 				<img src="{{ asset('images/errors/403-error.jpg') }}" class="img-fluid rounded " alt="">
 			</a>

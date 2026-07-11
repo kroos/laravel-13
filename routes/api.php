@@ -6,12 +6,25 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\API\ModelAjaxSupportController;
 
-Route::middleware(['auth', 'auth:sanctum'])->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 	Route::controller(ModelAjaxSupportController::class)->group(function () {
-		Route::get('/getActivityLogs', 'getActivityLogs')->name('getActivityLogs');
 		Route::get('/getYesNoOptions', 'getYesNoOptions')->name('getYesNoOptions');
+
+
+
+
+
+
+
+		// activity-log
+		Route::get('/getActivityLogs', 'getActivityLogs')->name('getActivityLogs');
+		// generator
+		Route::get('/getProgress', 'getProgress')->name('getProgress');
+		Route::get('/getJobBatchTable', 'getJobBatchTable')->name('getJobBatchTable');
 	});
 });
+
+
 
 // Get all countries
 Route::get('/countries', function () {
@@ -46,3 +59,4 @@ Route::get('/states/{country_id}', function ($country_id) {
 	return response()->json($filtered);
 })->name('states');
 
+require __DIR__.'/apiCRUD.php';

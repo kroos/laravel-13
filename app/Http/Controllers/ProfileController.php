@@ -18,7 +18,7 @@ class ProfileController extends Controller
 	{
 		return view('profile.edit', [
 			// 'user' => $request->user(),
-			'user' => $request->user()->belongstouser,
+			'user' => $request->user()->user,
 		]);
 	}
 
@@ -33,15 +33,15 @@ class ProfileController extends Controller
 		// 	$request->user()->email_verified_at = null;
 		// }
 
-		// $request->user()->belongstouser()->save();
+		// $request->user()->user()->save();
 
-		$request->user()->belongstouser->fill($request->validated());
+		$request->user()->user->fill($request->validated());
 
-		if ($request->user()->belongstouser->isDirty('email')) {
-			$request->user()->belongstouser->email_verified_at = null;
+		if ($request->user()->user->isDirty('email')) {
+			$request->user()->user->email_verified_at = null;
 		}
 
-		$request->user()->belongstouser->save();
+		$request->user()->user->save();
 
 		return Redirect::route('profile.edit')->with('status', 'profile-updated');
 	}
@@ -60,7 +60,7 @@ class ProfileController extends Controller
 		Auth::logout();
 
 		$user->delete();
-		$user->belongstouser->delete();
+		$user->user->delete();
 
 		$request->session()->invalidate();
 		$request->session()->regenerateToken();

@@ -1,4 +1,4 @@
-const { routes } = window.data;
+const { route, url } = window.data;
 
 var table = $('#logs-table').DataTable({
 	lengthMenu: [ [100, 200, 500, 1000], [100, 200, 500, 1000] ],
@@ -11,11 +11,10 @@ var table = $('#logs-table').DataTable({
 
 	// dom: 'Bfrtip',
 	ajax: {
-		url: routes.getActivityLogs,
+		url: route.getActivityLogs,
 		type: 'GET',
 		// dataSrc: '',
 		data: function (d) {
-			// d._token = 'dont need this anymore'
 			d.search_value = d.search.value; // map DataTables search
 		}
 	},
@@ -51,7 +50,7 @@ var table = $('#logs-table').DataTable({
 		// 	}
 		// },
 		{
-			data: 'name',
+			data: 'user',
 			title:'User',
 			defaultContent: 'System'
 		},
@@ -65,7 +64,7 @@ var table = $('#logs-table').DataTable({
 			render: function(id){
 				return `
 				<div class="btn-group btn-group-sm" role="group">
-					<a href="${routes.activityLogs}/${id}" class="btn btn-sm btn-outline-primary">
+					<a href="${url.activitylogs}/${id}" class="btn btn-sm btn-outline-primary">
 						<i class="fa-regular fa-eye"></i>
 					</a>
 					<button type="button" class="btn btn-sm btn btn-outline-danger btn-del" data-id="${id}">
@@ -78,23 +77,15 @@ var table = $('#logs-table').DataTable({
 	],
 	initComplete: function(settings, response) {
 		console.log(settings, response); // This runs after successful loading
-
 		$(document).on('click', '.btn-del', function (e) {
 			const id = $(this).data('id');
 			swal.fire({
-				title: 'Delete Log?',
-				text: 'This will delete the log record.',
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonText: 'Yes, delete it'
+				...config.swal,
 			}).then(res=>{
 				if(res.isConfirmed){
 					$.ajax({
-						url: `${routes.activityLogs}/${id}`,
+						url: `${url.activitylogs}/${id}`,
 						type: 'DELETE',
-						data: {
-							// _token:'{{ csrf_token() }}'
-						},
 						success: ()=> table.ajax.reload()
 					});
 				}

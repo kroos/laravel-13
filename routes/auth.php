@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -9,9 +11,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\System\ActivityLogController;
-
-use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\System\BatchProgressController;
 
 Route::middleware('auth')->group(function () {
 
@@ -61,5 +61,15 @@ Route::middleware('auth')->group(function () {
 
 
 
+
+
+
+
+
+	Route::controller(BatchProgressController::class)->group(function () {
+		Route::get('progress', 'progress')->name('progress');
+		Route::get('/progress/index', 'index')->name('progress.index');
+		Route::get('/progress/downloadCSV', 'downloadCSV')->name('progress.downloadCSV');
+	});
 });
 

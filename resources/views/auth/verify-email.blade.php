@@ -8,7 +8,7 @@
 		</div>
 	@endif
 
-	<div class="col-sm-12 row mx-auto justify-content-center">
+	<div class="col-sm-12 d-flex flex-column mx-auto justify-content-center">
 
 		<div class="card">
 			<div class="card-header">
@@ -18,23 +18,24 @@
 				<p>Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.</p>
 			</div>
 			<div class="card-footer">
-				<div class="row">
-					<div class="col-auto">
+				<!-- <div class="row"> -->
+				<div class="d-flex justify-content-end">
+					<div class="col-auto mx-1">
 						<form method="POST" action="{{ route('verification.send') }}" id="form" class="needs-validation">
 							@csrf
 							<div class="col">
-								<button type="submit" class="btn btn-sm btn-primary m-0">
+								<button type="submit" class="btn btn-sm btn-outline-primary m-0">
 									{{ __('Resend Verification Email') }}
 								</button>
 							</div>
 						</form>
 					</div>
 
-					<div class="col-auto">
+					<div class="col-auto mx-1">
 						<form method="POST" action="{{ route('logout') }}" id="form" class="needs-validation">
 							@csrf
 							<div class="col">
-								<button type="submit" class="btn btn-sm btn-primary m-0">
+								<button type="submit" class="btn btn-sm btn-outline-primary m-0">
 									{{ __('Log Out') }}
 								</button>
 							</div>

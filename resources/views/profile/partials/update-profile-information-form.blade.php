@@ -1,8 +1,3 @@
-
-		<h2 >
-			{{ __('Profile Information') }}
-		</h2>
-
 		<p>
 			{{ __("Update your account's profile information and email address.") }}
 		</p>
@@ -11,9 +6,6 @@
 		@csrf
 	</form>
 
-	<form method="post" action="{{ route('profile.update') }}" >
-		@csrf
-		@method('patch')
 
 		<div class="form-group row m-2 @error('name') has-error @enderror">
 			<label for="name" class="col-sm-4 col-form-label col-form-label-sm">Name : </label>
@@ -48,12 +40,3 @@
 			@endif
 		</div>
 
-		<div class="col-sm-12 justify-self-end m-4">
-			<button type="submit" class="btn btn-sm btn-primary m-3">
-				{{ __('Save') }}
-			</button>
-			@if (session('status') === 'profile-updated')
-				<p class="tw-text-sm tw-text-gray-600">{{ __('Saved.') }}</p>
-			@endif
-		</div>
-	</form>

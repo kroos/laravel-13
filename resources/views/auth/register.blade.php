@@ -56,7 +56,7 @@
 			</div>
 			<div class="card-footer text-end">
 				<div class="m-0">
-					<button type="submit" class="btn btn-sm btn-primary m-3">
+					<button type="submit" class="btn btn-sm btn-outline-primary m-3">
 						{{ __('Register') }}
 					</button>
 

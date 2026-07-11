@@ -1,10 +1,4 @@
-		<h2>{{ __('Update Password') }}</h2>
-
-		<p>{{ __('Ensure your account is using a long, random password to stay secure.') }}</p>
-
-	<form method="post" action="{{ route('password.update') }}">
-		@csrf
-		@method('PUT')
+<p>{{ __('Ensure your account is using a long, random password to stay secure.') }}</p>
 
 		<div class="form-group row m-2 @error('current_password') has-error @enderror">
 			<label for="current_password" class="col-sm-4 col-form-label col-form-label-sm">Current Password : </label>
@@ -29,14 +23,3 @@
 				@error('password_confirmation') <div class="invalid-feedback fw-lighter">{{ $message }}</div> @enderror
 			</div>
 		</div>
-
-		<div class="col-sm-12 justify-self-end m-4">
-			<button type="submit" class="btn btn-sm btn-primary m-3">
-				{{ __('Save') }}
-			</button>
-			@if (session('status') === 'password-updated')
-				<p class="tw-text-sm tw-text-gray-600">{{ __('Saved.') }}</p>
-			@endif
-		</div>
-
-	</form>

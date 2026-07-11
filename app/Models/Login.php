@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -94,7 +93,7 @@ class Login extends Authenticatable implements MustVerifyEmail
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// db relation belongsTo
-	public function belongstouser(): BelongsTo
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo(\App\Models\User::class, 'user_id');
 	}
@@ -128,14 +127,14 @@ class Login extends Authenticatable implements MustVerifyEmail
 	public function getEmailForPasswordReset()
 	{
 		// return $this->email;
-		return $this->belongstouser->email;
+		return $this->user->email;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// for email Notifiable
 	public function routeNotificationForMail($notification)
 	{
-		return [$this->belongstouser->email => $this->belongstouser->name];
+		return [$this->user->email => $this->user->name];
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +147,7 @@ class Login extends Authenticatable implements MustVerifyEmail
 	public function hasVerifiedEmail()
 	{
 		// return ! is_null($this->email_verified_at);
-		return ! is_null($this->belongstouser->email_verified_at);
+		return ! is_null($this->user->email_verified_at);
 	}
 
 	/**
@@ -158,7 +157,7 @@ class Login extends Authenticatable implements MustVerifyEmail
 	 */
 	public function markEmailAsVerified()
 	{
-		return $this->belongstouser->forceFill([
+		return $this->user->forceFill([
 			'email_verified_at' => $this->freshTimestamp(),
 		])->save();
 	}

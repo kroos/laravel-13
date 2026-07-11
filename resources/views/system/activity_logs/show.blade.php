@@ -10,15 +10,20 @@
   </div>
   <div class="card-body">
     <div class="row mb-3">
+      <p class="text-center"><strong>Description: </strong> {{ $log->description }}</p>
       <div class="col-md-6">
-        <strong>Event:</strong> {{ ucfirst($log->event) }} <br>
-        <strong>Model:</strong> {{ class_basename($log->model_type) }} #{{ $log->model_id }} <br>
-        <strong>User:</strong> {{ $log?->name }} <br>
-        <strong>IP:</strong> {{ $log->ip_address }}
+        <strong>Event: </strong> {{ ucfirst($log->event) }} <br>
+        <strong>Model: </strong> {{ class_basename($log->model_type) }} #{{ $log->model_id }} <br>
+        <strong>User: </strong> {{ $log?->user }} <br>
+        <strong>IP: </strong> {{ $log->ip_address }} <br>
+        <strong>Created At: </strong> {{ $log->created_at->format('j M Y h:i:s a') }} <br>
       </div>
       <div class="col-md-6">
-        <strong>Created At:</strong> {{ $log->created_at->format('j M Y h:i:s a') }} <br>
-        <strong>User Agent:</strong> <small>{{ $log->user_agent }}</small>
+        <strong>Guard: </strong> {{ $log->guard }} <br>
+        <strong>Route: </strong> {{ $log->route_name }} <br>
+        <strong>Method: </strong> {{ $log->method }} <br>
+        <strong>URL: </strong> {{ $log->url }} <br>
+        <strong>User Agent: </strong> <small>{{ $log->user_agent }}</small>
       </div>
     </div>
 

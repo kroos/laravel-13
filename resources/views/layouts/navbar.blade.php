@@ -31,12 +31,12 @@
 				@auth
 					<div class="dropdown me-5">
 						<a href="#" class="btn btn-sm btn-outline-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							@if(\Auth::user()->belongstouser->unreadNotifications?->count())
+							@if(\Auth::user()->user->unreadNotifications?->count())
 								<span class="badge text-bg-warning">
-									{{ \Auth::user()->belongstouser->unreadNotifications->count() }}
+									{{ \Auth::user()->user->unreadNotifications->count() }}
 								</span>
 							@endif
-              {{ Auth::user()->belongstouser->name }}
+              {{ Auth::user()->user->name }}
             </a>
 						<ul class="dropdown-menu">
 							<li>

@@ -39,8 +39,8 @@
 
 			</div>
 			<div class="card-footer">
-				<div class="text-center m-0">
-					<button type="submit" class="btn btn-sm btn-primary m-0">
+				<div class="text-end m-0">
+					<button type="submit" class="btn btn-sm btn-outline-primary m-0">
 						{{ __('Reset Password') }}
 					</button>
 				</div>

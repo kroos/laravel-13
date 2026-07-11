@@ -12,10 +12,13 @@
 @endsection
 
 @section('js')
-	window.data = {
-		routes: {
-			getActivityLogs: "{{ route('getActivityLogs') }}",
-			activityLogs: "{{ url('activity-logs') }}",
-		}
-	};
+window.data = {
+	route: {
+		getActivityLogs: '{{ route('getActivityLogs') }}',
+	},
+	url: {
+		activitylogs: '{{ url('activity-logs') }}',
+	},
+};
+
 @endsection
