@@ -56,6 +56,7 @@ class MakeControl extends Command
 		}
 		$replace = [
 			'namespace' => "App\\Http\\Controllers\\{$folder}",
+			'namespaceRequest' => "App\\Http\\Requests\\{$folder}",
 			'requestNamespace' => $folder,
 			'resourceNamespace' => $folder,
 			'namespacemodel' => $folder,
