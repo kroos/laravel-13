@@ -1,7 +1,7 @@
 <?php
 namespace App\Traits;
 
-use App\Models\ActivityLog;
+use App\Models\System\ActivityLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Log;
