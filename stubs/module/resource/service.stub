@@ -1,6 +1,5 @@
 <?php
-namespace App\Http\Controllers{{ folderController }};
-use App\Http\Controllers\Controller;
+namespace App\Services{{ folderController }};
 
 // for controller output
 use Illuminate\Http\{
@@ -10,25 +9,15 @@ use Illuminate\Http\{
 };
 // use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+// use Illuminate\Support\Facades\Http;
 
 // models
 use App\Models\{
 	{{ namespaceModel }},
 };
 
-// load validation
-use Illuminate\Http\Request;;
-// use Illuminate\Support\Facades\Validator;
-// use Illuminate\Validation\Rule;
-
-// resource
-// use App\Resources\{{ namespaceController }}Resource;
-
-// service
-// use App\Services\{{ namespaceController }}Service;
-
-// policy
-// use App\Policies\{{ namespaceController }}Policy;
+// load request
+use Illuminate\Http\Request;
 
 // load db facade
 // use Illuminate\Database\Eloquent\Builder;
@@ -58,16 +47,11 @@ use \Carbon\{
 // use Exception;
 // use Log;
 
-// load pdf
-// use Barryvdh\DomPDF\Facade\Pdf;
-
-class {{ classController }}Controller extends Controller
+class {{ classController }}Service extends Controller
 {
-	/**
-	 * Handle the incoming request.
-	 */
-	public function __invoke(Request $request): View
+	public function __construct()
 	{
-		return view('{{ variableController }}.index');
 	}
+
+	//
 }

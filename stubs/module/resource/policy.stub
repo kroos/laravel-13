@@ -1,12 +1,14 @@
 <?php
-namespace {{ namespace }};
+namespace App\Policies{{ folderController }};
 
 use Illuminate\Auth\Access\Response;
 
 use App\Models\User;
-use App\Models\{{ modelNamespace }}\{{ class }};
+use App\Models\{
+	{{ namespaceModel }}
+};
 
-class {{ class }}
+class {{ classController }}Policy
 {
 	/**
 	 * Determine whether the user can view any models.
@@ -19,7 +21,7 @@ class {{ class }}
 	/**
 	 * Determine whether the user can view the model.
 	 */
-	public function view(User $user, {{ class }} ${{ variable }}): bool
+	public function view(User $user, {{ classModel }} ${{ variableModel }}): bool
 	{
 		return true;
 	}
@@ -35,7 +37,7 @@ class {{ class }}
 	/**
 	 * Determine whether the user can update the model.
 	 */
-	public function update(User $user, {{ class }} ${{ variable }}): bool
+	public function update(User $user, {{ classModel }} ${{ variableModel }}): bool
 	{
 		return true;
 	}
@@ -43,7 +45,7 @@ class {{ class }}
 	/**
 	 * Determine whether the user can delete the model.
 	 */
-	public function delete(User $user, {{ class }} ${{ variable }}): bool
+	public function delete(User $user, {{ classModel }} ${{ variableModel }}): bool
 	{
 		return true;
 	}
@@ -51,7 +53,7 @@ class {{ class }}
 	/**
 	 * Determine whether the user can restore the model.
 	 */
-	public function restore(User $user, {{ class }} ${{ variable }}): bool
+	public function restore(User $user, {{ classModel }} ${{ variableModel }}): bool
 	{
 		return false;
 	}
@@ -59,7 +61,7 @@ class {{ class }}
 	/**
 	 * Determine whether the user can permanently delete the model.
 	 */
-	public function forceDelete(User $user, {{ class }} ${{ variable }}): bool
+	public function forceDelete(User $user, {{ classModel }} ${{ variableModel }}): bool
 	{
 		return false;
 	}

@@ -5,14 +5,14 @@
 
 	<div class="card my-2">
 		<div class="card-header d-flex justify-content-between">
-			<h3 class="my-auto">{{ class }}</h3>
-			<a href="{{ route('{{ modelVariable }}.create') }}" class="my-auto btn btn-sm btn-outline-primary">
+			<h3 class="my-auto">{{ classController }}</h3>
+			<a href="{{ route('{{ variableController }}.create') }}" class="my-auto btn btn-sm btn-outline-primary">
 				<i class="fa-solid fa-arrow-up-right-from-square"></i>New Data
 			</a>
 		</div>
 		<div class="card-body">
 
-			<table id="{{ modelVariable }}"></table>
+			<table id="{{ variableController }}"></table>
 
 		</div>
 	</div>
@@ -23,10 +23,10 @@
 @section('js')
 window.data = {
 	route: {
-		get{{ class }}: '{{ route('get{{ class }}') }}',
+		get{{ classController }}: '{{ route('get{{ classController }}') }}',
 	},
 	url: {
-		{{ modelVariable }}: '{{ url('{{ modelVariable }}') }}',
+		{{ variableController }}: '{{ url('{{ variableController }}') }}',
 	},
 	old: {
 	},

@@ -1,5 +1,5 @@
 <?php
-namespace {{ namespace }};
+namespace App\Models{{ folderModel }};
 
 // use Illuminate\Database\Eloquent\Model;
 use App\Models\Model;
@@ -23,7 +23,7 @@ use Illuminate\Support\Str;
 // use Cviebrock\EloquentSluggable\Sluggable;
 // use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 
-class {{ class }} extends Model
+class {{ classModel }} extends Model
 {
 	use SoftDeletes/*, Sluggable*/;
 	// protected $connection = '';

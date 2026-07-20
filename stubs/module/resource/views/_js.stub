@@ -1,9 +1,9 @@
 window.data = {
 	route: {
-		get{{ class }}: '{{ route('get{{ class }}') }}',
+		get{{ classController }}: '{{ route('get{{ classController }}') }}',
 	},
 	url: {
-		{{ modelVariable }}: '{{ url('{{ modelVariable }}') }}',
+		{{ variableController }}: '{{ url('{{ variableController }}') }}',
 	},
 	old: {
 		var_id: @json(old('var_id', @$var->var_id)),

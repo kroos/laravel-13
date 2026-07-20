@@ -1,14 +1,14 @@
 <?php
-namespace {{ namespaceRequest }};
+namespace App\Http\Requests{{ folderController }};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 use App\Models\{
-	{{ modelNamespace }}\{{ modelClass }},
+	{{ namespaceModel }},
 };
 
-class Update{{ class }}Request extends FormRequest
+class Update{{ classController }}Request extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.

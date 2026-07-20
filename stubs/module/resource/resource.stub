@@ -1,10 +1,10 @@
 <?php
-namespace {{ namespace }};
+namespace App\Resources{{ folderController }};
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class {{ class }}Resource extends JsonResource
+class {{ classController }}Resource extends JsonResource
 {
 	/**
 	 * Transform the resource into an array.

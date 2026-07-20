@@ -10,7 +10,7 @@ function getError(name) {
 // radio/checkbox
 // function populateCheckbox(gItems = 0) {
 // 	$.ajax({
-// 		url: route.get{{ class }},
+// 		url: route.get{{ classController }},
 // 		dataType: 'json',
 // 		type: "POST",
 // 		success: function (response) {
@@ -53,7 +53,7 @@ function getError(name) {
 // $(`#var_id`).select2({
 // 	...config.select2,
 // 	ajax: {
-// 		url: route.get{{ class }},
+// 		url: route.get{{ classController }},
 // 		type: 'POST',
 // 		dataType: 'json',
 // 		delay: 250,											// Delay to reduce server requests
@@ -77,7 +77,7 @@ function getError(name) {
 // });
 // if(old.var_id){
 // 	$.ajax({
-// 		url: route.get{{ class }},
+// 		url: route.get{{ classController }},
 // 		type: 'POST',
 // 		dataType: 'json',
 // 		data: {
@@ -108,7 +108,7 @@ function getError(name) {
 // 			...config.swal,
 // 		},
 // 		ajax: {
-// 			url: url.{{ variable }},
+// 			url: url.{{ variableController }},
 // 			method: 'DELETE',
 // 			dataType: 'json',
 // 			data: {

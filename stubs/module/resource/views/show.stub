@@ -4,13 +4,13 @@
 
 	<div class="card my-2">
 		<div class="card-header d-flex justify-content-between">
-			<h3 class="my-auto">{{ class }} Details</h3>
-			<a href="{{ route('{{ variable }}.index') }}" class="my-auto btn btn-sm btn-outline-primary">
+			<h3 class="my-auto">{{ classController }} Details</h3>
+			<a href="{{ route('{{ variableController }}.index') }}" class="my-auto btn btn-sm btn-outline-primary">
 				<i class="fa-solid fa-arrow-up-right-from-square"></i>Back
 			</a>
 		</div>
 		<div class="card-body">
-			<table id="{{ variable }}"></table>
+			<table id="{{ variableController }}"></table>
 		</div>
 	</div>
 
@@ -20,7 +20,7 @@
 @section('js')
 window.data = {
 	route: {
-		get{{ class }}: '{{ route('get{{ class }}') }}',
+		get{{ classController }}: '{{ route('get{{ classController }}') }}',
 	},
 	url: {
 	},

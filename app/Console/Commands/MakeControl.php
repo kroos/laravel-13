@@ -15,7 +15,7 @@ class MakeControl extends Command
 		{--type=resource : Stub profile}
 	';
 
-	protected $description = 'Generate a full module (controller, requests)';
+	protected $description = 'Generate a module (controller, requests, policies, services, blade and javascript)';
 
 	public function handle()
 	{
@@ -42,39 +42,60 @@ class MakeControl extends Command
 		|
 		*/
 
+		// core
+		$controller = $name;
 		$model = $this->option('model') ?: $name;
-		$class = class_basename($name);
-		$folder = str_replace(
-				'\\',
-				'/',
-				Str::beforeLast($name, '\\')
-		);
-		$modelClass = class_basename($model);
-		$modelNamespace = Str::beforeLast($model, '\\');
-		if ($modelNamespace === $model) {
-				$modelNamespace = '';
-		}
+		$folderController = str_replace(
+														'\\',
+														'/',
+														Str::beforeLast($name, '\\')
+												);
+		$folderModel = str_replace(
+												'\\',
+												'/',
+												Str::beforeLast($model, '\\')
+										);
+		$classController = class_basename($name);
+		$classModel = class_basename($model);
+		$namespaceController = $controller;
+		$namespaceModel = $model;
+		$fC = ($folderController === $controller)?null:'\\'.$folderController;
+		$fM = ($folderModel === $model)?null:'\\'.$folderModel;
+		$variableController = Str::kebab($classController);
+		$variableModel = Str::camel($classModel);
+
+		// dd(
+		// 	'controller = '.$controller,
+		// 	'model = '.$model,
+		// 	'classController = '.$classController,
+		// 	'classModel = '.$classModel,
+		// 	'namespaceController = '.$namespaceController,
+		// 	'namespaceModel = '.$namespaceModel,
+		// 	'folderController = '.$fC,
+		// 	'folderModel = '.$fM,
+		// 	'variableController = '.$variableController,
+		// 	'variableModel = '.$variableModel,
+		// );
+
 		$replace = [
-			'namespace' => "App\\Http\\Controllers\\{$folder}",
-			'namespaceRequest' => "App\\Http\\Requests\\{$folder}",
-			'requestNamespace' => $folder,
-			'resourceNamespace' => $folder,
-			'namespacemodel' => $folder,
-			'controllerClass' => $class,
-			'class' => $class,
-			'variable' => Str::camel($class),
-			'modelVariable' => Str::camel($modelClass),
-			'viewVariable' => Str::kebab($class),
-			'modelNamespace' => $modelNamespace,
-			'modelClass' => $modelClass,
+			'controller' => $controller,
+			'model' => $model,
+			'classController' => $classController,
+			'classModel' => $classModel,
+			'namespaceController' => $namespaceController,
+			'namespaceModel' => $namespaceModel,
+			'folderController' => $fC,
+			'folderModel' => $fM,
+			'variableController' => $variableController,
+			'variableModel' => $variableModel,
 		];
 
 		$viewPath = resource_path(
-				'views/' . Str::kebab($class)
+				'views/' . $variableController
 		);
 
-		$modulePath = resource_path(
-			'js/modules/' . Str::camel($class)
+		$jsPath = resource_path(
+			'js/modules/' . $variableController
 		);
 
 		$profile = $this->option('type');
@@ -86,9 +107,20 @@ class MakeControl extends Command
 		*/
 
 		$this->writeFile(
-			app_path("Http/Controllers/{$folder}/{$class}Controller.php"),
+			app_path("Http/Controllers/{$namespaceController}Controller.php"),
 			$this->buildStub('controller.stub', $replace, $profile)
 		);
+
+		/*
+		|--------------------------------------------------------------------------
+		| Models
+		|--------------------------------------------------------------------------
+		*/
+
+		// $this->writeFile(
+		// 	app_path("Models/{$namespaceModel}.php"),
+		// 	$this->buildStub('model.stub', $replace, $profile)
+		// );
 
 		/*
 		|--------------------------------------------------------------------------
@@ -97,13 +129,46 @@ class MakeControl extends Command
 		*/
 
 		$this->writeFile(
-			app_path("Http/Requests/{$folder}/Store{$class}Request.php"),
+			app_path("Http/Requests/{$fC}/Store{$classController}Request.php"),
 			$this->buildStub('store-request.stub', $replace, $profile)
 		);
 
 		$this->writeFile(
-			app_path("Http/Requests/{$folder}/Update{$class}Request.php"),
+			app_path("Http/Requests/{$fC}/Update{$classController}Request.php"),
 			$this->buildStub('update-request.stub', $replace, $profile)
+		);
+
+		/*
+		|--------------------------------------------------------------------------
+		| Policy
+		|--------------------------------------------------------------------------
+		*/
+
+		$this->writeFile(
+			app_path("Policies/{$namespaceController}Policy.php"),
+			$this->buildStub('policy.stub', $replace, $profile)
+		);
+
+		/*
+		|--------------------------------------------------------------------------
+		| Resources
+		|--------------------------------------------------------------------------
+		*/
+
+		// $this->writeFile(
+		// 	app_path("Resources/{$namespaceController}Resource.php"),
+		// 	$this->buildStub('resource.stub', $replace, $profile)
+		// );
+
+		/*
+		|--------------------------------------------------------------------------
+		| Services
+		|--------------------------------------------------------------------------
+		*/
+
+		$this->writeFile(
+			app_path("Services/{$namespaceController}Service.php"),
+			$this->buildStub('service.stub', $replace, $profile)
 		);
 
 		/*
@@ -138,12 +203,31 @@ class MakeControl extends Command
 			'form',
 		] as $js) {
 			$this->writeFile(
-				"{$modulePath}/{$js}.js",
+				"{$jsPath}/{$js}.js",
 				$this->buildStub("js/{$js}.stub", $replace, $profile)
 			);
 		}
 
 		$this->info('Resource generated successfully.');
+		$this->info('Route should be like this.');
+		$this->info("
+use App\Http\Controllers\{$namespaceController}Controller;
+Route::resources([
+	'{$variableController}' => {$namespaceController}Controller::class,
+]);
+Or
+Route::controller({$namespaceController}Controller::class)->group(function(){
+	Route::prefix('{$variableController}')->name('{$variableController}.')->group(function(){
+		Route::get('/', 'index')->name('index');
+		Route::get('/', 'create')->name('create');
+		Route::get('/', 'store')->name('store');
+		Route::get('/{{$variableModel}}', 'show')->name('show');
+		Route::get('/{{$variableModel}}/edit', 'edit')->name('edit');
+		Route::patch('/{{$variableModel}}', 'update')->name('update');
+		Route::delete('/{{$variableModel}}', 'destroy')->name('destroy');
+	});
+});
+		");
 
 		return self::SUCCESS;
 	}
@@ -158,11 +242,6 @@ class MakeControl extends Command
 	protected function className($name)
 	{
 		return class_basename($name);
-	}
-
-	protected function folder($name)
-	{
-		return explode('\\', $name)[0];
 	}
 
 	protected function buildStub(

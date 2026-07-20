@@ -1,7 +1,7 @@
 const { route, url, old } = window.data;
 
 function loadTable(){
-	$.post(route.get{{ class }}, function (response) {
+	$.post(route.get{{ classController }}, function (response) {
 		table.clear().rows.add(response).draw();
 	}, 'json');
 }
@@ -60,7 +60,7 @@ function SwalDelete(itemId){
 		preConfirm: function()                {
 			return new Promise(function(resolve) {
 				$.ajax({
-					url: `${url.{{ variable }}}/${itemId}`,
+					url: `${url.{{ variableController }}}/${itemId}`,
 					type: 'DELETE',
 					data:	{
 						id: itemId,

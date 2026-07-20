@@ -1,5 +1,5 @@
 <?php
-namespace {{ namespace }};
+namespace App\Http\Controllers{{ folderController }};
 use App\Http\Controllers\Controller;
 
 // for controller output
@@ -13,20 +13,26 @@ use Illuminate\View\View;
 
 // models
 use App\Models\{
-	{{ modelNamespace }}\{{ modelClass }},
+	{{ namespaceModel }},
 };
 
 // load request
 use Illuminate\Http\Request;
-use App\Http\Requests\{
-	{{ requestNamespace }}\Store{{ controllerClass }}Request,
-	{{ requestNamespace }}\Update{{ controllerClass }}Request,
+use App\Http\Requests{{ folderController }}\{
+	Store{{ classController }}Request,
+	Update{{ classController }}Request,
 };
 // use Illuminate\Support\Facades\Validator;
 // use Illuminate\Validation\Rule;
 
 // resource
-// use App\Http\Resources\{{ resourceNamespace }}\{{ modelClass }}Resource;
+// use App\Resources\{{ namespaceController }}Resource;
+
+// service
+// use App\Services\{{ namespaceController }}Service;
+
+// policy
+// use App\Policies\{{ namespaceController }}Policy;
 
 // load db facade
 // use Illuminate\Database\Eloquent\Builder;
@@ -59,14 +65,14 @@ use \Carbon\{
 // load pdf
 // use Barryvdh\DomPDF\Facade\Pdf;
 
-class {{ controllerClass }}Controller extends Controller
+class {{ classController }}Controller extends Controller
 {
 	/**
 	 * Display a listing of the resource.
 	 */
 	public function index(): View
 	{
-		return view('{{ viewVariable }}.index');
+		return view('{{ variableController }}.index');
 	}
 
 	/**
@@ -74,15 +80,15 @@ class {{ controllerClass }}Controller extends Controller
 	 */
 	public function create(): View
 	{
-		return view('{{ viewVariable }}.create');
+		return view('{{ variableController }}.create');
 	}
 
 	/**
 	 * Store a newly created resource in storage.
 	 */
-	public function store(Store{{ controllerClass }}Request $request): RedirectResponse
+	public function store(Store{{ classController }}Request $request): RedirectResponse
 	{
-		$result = {{ modelClass }}::create(
+		$result = {{ classModel }}::create(
 			$request->except('_token')
 		);
 
@@ -90,57 +96,57 @@ class {{ controllerClass }}Controller extends Controller
 			$request->arrays
 		);
 
-		return redirect()->route('{{ modelVariable }}.index')->with('success', 'Data Added');
+		return redirect()->route('{{ variableController }}.index')->with('success', 'Data Added');
 	}
 
 	/**
 	 * Display the specified resource.
 	 */
-	public function show({{ modelClass }} ${{ modelVariable }}): View
+	public function show({{ classModel }} ${{ variableModel }}): View
 	{
-		return view('{{ viewVariable }}.show', ['var' => ${{ modelVariable }}]);
+		return view('{{ variableController }}.show', ['var' => ${{ variableModel }}]);
 	}
 
 	/**
 	 * Show the form for editing the specified resource.
 	 */
-	public function edit({{ modelClass }} ${{ modelVariable }}): View
+	public function edit({{ classModel }} ${{ variableModel }}): View
 	{
-		return view('{{ viewVariable }}.edit', ['var' => ${{ modelVariable }}]);
+		return view('{{ variableController }}.edit', ['var' => ${{ variableModel }}]);
 	}
 
 	/**
 	 * Update the specified resource in storage.
 	 */
 	public function update(
-		Update{{ controllerClass }}Request $request,
-		{{ modelClass }} ${{ modelVariable }}
+		Update{{ classController }}Request $request,
+		{{ classModel }} ${{ variableModel }}
 	): RedirectResponse
 	{
-		// ${{ modelVariable }}->update(
+		// ${{ variableModel }}->update(
 		// 	$request->validated()
 		// );
 
-		${{ modelVariable }}->update(
+		${{ variableModel }}->update(
 			$request->except('_token', '_method')
 		);
 
 		foreach ($request->arrays as $array) {
-			${{ modelVariable }}->hasManyRelationship()->updateOrCreate(
+			${{ variableModel }}->hasManyRelationship()->updateOrCreate(
 				['id' => $array['id'] ?? null],
 				$array
 			);
 		}
 
-		return redirect()->route('{{ modelVariable }}.index')->with('success', 'Data Updated');
+		return redirect()->route('{{ variableController }}.index')->with('success', 'Data Updated');
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 */
-	public function destroy({{ modelClass }} ${{ modelVariable }}): JsonResponse
+	public function destroy({{ classModel }} ${{ variableModel }}): JsonResponse
 	{
-		${{ modelVariable }}->delete();
+		${{ variableModel }}->delete();
 		return response()->json([
 			'status' => 'success',
 			'message' => 'Data Deleted',
