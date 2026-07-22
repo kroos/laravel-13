@@ -1,17 +1,25 @@
 <?php
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\ConfirmablePasswordController;
-use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\{
+	AuthenticatedSessionController,
+	ConfirmablePasswordController,
+	EmailVerificationPromptController,
+	EmailVerificationNotificationController,
+	VerifyEmailController,
+	PasswordController,
+};
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\System\{
+	ActivityLogController,
+	BatchProgressController,
+};
 
-use App\Http\Controllers\System\ActivityLogController;
-use App\Http\Controllers\System\BatchProgressController;
+use App\Http\Controllers\{
+	ProfileController,
+	// all controller here
+
+};
 
 Route::middleware('auth')->group(function () {
 
@@ -56,6 +64,30 @@ Route::middleware('auth')->group(function () {
 	});
 //////////////////////////////////////////////////////////////////////////////
 	// insert your normal page route here
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

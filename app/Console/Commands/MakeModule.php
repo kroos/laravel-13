@@ -8,259 +8,290 @@ use Illuminate\Support\Str;
 
 class MakeModule extends Command
 {
-	/**
-	 * The name and signature of the console command.
-	 *
-	 * @var string
-	 */
-	// protected $signature = 'app:make-module';
-	protected $signature = 'make:module {name}';
+	protected $signature = '
+		make:module
+		{name}
+		{--m|model= : Model class to reference (optional)}
+		{--M|new-model : Create a new model class with migration (optional)}
+		{--type=resource : Stub profile}
+	';
 
+	protected $description = "
+Generate a module (controller, model, requests, policies, services, blade and javascript).
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	// protected $description = 'Command description';
-	protected $description = 'Generate a full module (model, controller, requests, policy, resource)';
+# Creates controller + model + migration (all named Test\Test)
+php artisan make:module Test\Test -M
 
-	/**
-	 * Execute the console command.
-	 */
+# References existing model only, no files created
+php artisan make:module Test\Test -m App\Models\User
+
+# Reference existing model + create new one from it
+php artisan make:module Test\Test -m App\Models\User -M
+
+# No model option at all (model name = controller name, no files created)
+php artisan make:module Test\Test
+	";
+
 	public function handle()
 	{
-		$name = $this->argument('name');
-		$class = class_basename($name);
+		return match ($this->option('type')) {
+			'resource' => $this->generateResource(),
+			default => $this->fail("Unknown profile [{$this->option('type')}]"),
+		};
+	}
 
-		$folder = str_replace(
-			'\\',
-			'/',
-			Str::beforeLast($name, '\\')
-		);
+	protected function generateResource()
+	{
+		$name = $this->argument('name');
+
+		/*
+		|--------------------------------------------------------------------------
+		| Auto detect model
+		|--------------------------------------------------------------------------
+		|
+		| php artisan make:control ControlTest\ControlGerabah
+		|
+		| becomes
+		|
+		| App\Models\ControlTest\ControlGerabah
+		|
+		*/
+
+		// core
+		$controller = $name;
+		$model = $this->option('model') ?: $name;
+		$folderController = str_replace(
+														'\\',
+														'/',
+														Str::beforeLast($name, '\\')
+												);
+		$folderModel = str_replace(
+												'\\',
+												'/',
+												Str::beforeLast($model, '\\')
+										);
+		$classController = class_basename($name);
+		$classModel = class_basename($model);
+		$namespaceController = $controller;
+		$namespaceModel = $model;
+		$fC = ($folderController === $controller)?null:'\\'.$folderController;
+		$fM = ($folderModel === $model)?null:'\\'.$folderModel;
+		$variableController = Str::kebab($classController);
+		$variableModel = Str::camel($classModel);
+
+		// dd(
+		// 	'controller = '.$controller,
+		// 	'model = '.$model,
+		// 	'classController = '.$classController,
+		// 	'classModel = '.$classModel,
+		// 	'namespaceController = '.$namespaceController,
+		// 	'namespaceModel = '.$namespaceModel,
+		// 	'folderController = '.$fC,
+		// 	'folderModel = '.$fM,
+		// 	'variableController = '.$variableController,
+		// 	'variableModel = '.$variableModel,
+		// );
+
+		$replace = [
+			'controller' => $controller,
+			'model' => $model,
+			'classController' => $classController,
+			'classModel' => $classModel,
+			'namespaceController' => $namespaceController,
+			'namespaceModel' => $namespaceModel,
+			'folderController' => $fC,
+			'folderModel' => $fM,
+			'variableController' => $variableController,
+			'variableModel' => $variableModel,
+		];
 
 		$viewPath = resource_path(
-			'views/' .
-			// Str::lower($folder) .
-			// '/' .
-			// Str::kebab(Str::plural($class))
-			Str::kebab($class)		// TestProcedures => test-procedures
-			// Str::camel($class)		// TestProcedures => testProcedures
+				'views/' . $variableController
 		);
 
-		$modulePath = resource_path(
-			'js/modules/' .
-			// Str::lower($folder) .
-			// '/' .
-			// Str::kebab(Str::plural($class))
-			// Str::kebab($class)		// TestProcedures => test-procedures
-			Str::camel($class)		// TestProcedures => testProcedures
+		$jsPath = resource_path(
+			'js/modules/' . $variableController
 		);
 
-// dd(
-// $viewPath,
-// $modulePath
-// );
+		$profile = $this->option('type');
+
+		/*
+		|--------------------------------------------------------------------------
+		| Controller
+		|--------------------------------------------------------------------------
+		*/
 
 		$this->writeFile(
-			app_path("Models/{$folder}/{$class}.php"),
-			$this->buildStub('model.stub', [
-				'namespace' => "App\\Models\\{$folder}",
-				'class' => $class,
-			])
+			app_path("Http/Controllers/{$namespaceController}Controller.php"),
+			$this->buildStub('controller.stub', $replace, $profile)
 		);
 
-		// $this->call('make:model', [
-		// 	'name' => $name,
-		// 	'-m' => true 						//migration
-		// ]);
+		/*
+		|--------------------------------------------------------------------------
+		| Requests
+		|--------------------------------------------------------------------------
+		*/
 
 		$this->writeFile(
-			app_path("Http/Controllers/{$folder}/{$class}Controller.php"),
-			$this->buildStub('controller.stub', [
-				'namespace' => "App\\Http\\Controllers\\{$folder}",
-				'requestNamespace' => $folder,
-				'resourceNamespace' => $folder,
-				'modelNamespace' => $folder,
-				'controllerClass' => $class,
-				'modelClass' => $class,
-				'modelVariable' => Str::camel($class),
-				'viewVariable' => Str::kebab($class),
-			])
-		);
-
-		// $this->call('make:controller', [
-		// 	'name' => "{$name}Controller",
-		// 	'--resource' => true,
-		// 	'--model' => $name
-		// ]);
-
-		$this->writeFile(
-			app_path("Http/Requests/{$folder}/Store{$class}Request.php"),
-			$this->buildStub('store-request.stub', [
-				'namespace' => "App\\Http\\Requests\\{$folder}",
-				'namespacemodel' => $folder,
-				'class' => $class,
-				'modelNamespace' => $folder,
-				'modelClass' => $class,
-			])
+			app_path("Http/Requests/{$fC}/Store{$classController}Request.php"),
+			$this->buildStub('store-request.stub', $replace, $profile)
 		);
 
 		$this->writeFile(
-			app_path("Http/Requests/{$folder}/Update{$class}Request.php"),
-			$this->buildStub('update-request.stub', [
-				'namespace' => "App\\Http\\Requests\\{$folder}",
-				'namespacemodel' => $folder,
-				'class' => $class,
-				'modelNamespace' => $folder,
-				'modelClass' => $class,
-			])
+			app_path("Http/Requests/{$fC}/Update{$classController}Request.php"),
+			$this->buildStub('update-request.stub', $replace, $profile)
 		);
 
-		// $this->call('make:request', [
-		// 	'name' => "{$this->folder($name)}\\Store{$this->className($name)}Request"
-		// ]);
+		/*
+		|--------------------------------------------------------------------------
+		| Policy
+		|--------------------------------------------------------------------------
+		*/
 
-		// $this->call('make:request', [
-		// 	'name' => "{$this->folder($name)}\\Update{$this->className($name)}Request"
-		// ]);
+		$this->writeFile(
+			app_path("Policies/{$namespaceController}Policy.php"),
+			$this->buildStub('policy.stub', $replace, $profile)
+		);
 
-		// $this->call('make:policy', [
-		// 	'name' => "{$this->className($name)}Policy",
-		// 	'--model' => $name
-		// ]);
+		/*
+		|--------------------------------------------------------------------------
+		| Resources
+		|--------------------------------------------------------------------------
+		*/
 
 		// $this->writeFile(
-		// 	app_path("Policies/{$folder}/{$class}Policy.php"),
-		// 	$this->buildStub('policy.stub', [
-		// 		'namespace' => "App\\Policies\\{$folder}",
-		// 		'class' => $class,
-		// 		'modelNamespace' => $folder,
-		// 		'variable' => Str::camel($class),
-		// 	])
+		// 	app_path("Resources/{$namespaceController}Resource.php"),
+		// 	$this->buildStub('resource.stub', $replace, $profile)
 		// );
 
-		// $this->call('make:resource', [
-		// 	'name' => "{$this->className($name)}Resource"
-		// ]);
-
-		// $this->writeFile(
-		// 	app_path("Http/Resources/{$folder}/{$class}Resource.php"),
-		// 	$this->buildStub('resource.stub', [
-		// 		'namespace' => "App\\Http\\Resources\\{$folder}",
-		// 		'class' => $class,
-		// 	])
-		// );
-
-		$this->call('make:migration', [
-			'name' => 'create_' .
-			Str::snake(Str::pluralStudly($class)) .
-			'_table'
-		]);
-
-		/* View Files */
-		$this->writeFile(
-			"{$viewPath}/index.blade.php",
-			$this->buildStub('views/index.stub', [
-				'class' => $class,
-				'modelVariable' => Str::camel($class),
-				'viewVariable' => Str::kebab($class),
-			])
-		);
+		/*
+		|--------------------------------------------------------------------------
+		| Services
+		|--------------------------------------------------------------------------
+		*/
 
 		$this->writeFile(
-			"{$viewPath}/create.blade.php",
-			$this->buildStub('views/create.stub', [
-				'class' => $class,
-				'modelVariable' => Str::camel($class),
-				'viewVariable' => Str::kebab($class),
-			])
+			app_path("Services/{$namespaceController}Service.php"),
+			$this->buildStub('service.stub', $replace, $profile)
 		);
 
-		$this->writeFile(
-			"{$viewPath}/edit.blade.php",
-			$this->buildStub('views/edit.stub', [
-				'class' => $class,
-				'variable' => Str::camel($class),
-				'modelVariable' => Str::camel($class),
-				'viewVariable' => Str::kebab($class),
-			])
+		/*
+		|--------------------------------------------------------------------------
+		| Views
+		|--------------------------------------------------------------------------
+		*/
+
+		foreach ([
+			'index',
+			'create',
+			'edit',
+			'show',
+			'_form',
+			'_js',
+		] as $view) {
+			$this->writeFile(
+				"{$viewPath}/{$view}.blade.php",
+				$this->buildStub("views/{$view}.stub", $replace, $profile)
+			);
+		}
+
+		/*
+		|--------------------------------------------------------------------------
+		| JS
+		|--------------------------------------------------------------------------
+		*/
+
+		foreach ([
+			'index',
+			'show',
+			'form',
+		] as $js) {
+			$this->writeFile(
+				"{$jsPath}/{$js}.js",
+				$this->buildStub("js/{$js}.stub", $replace, $profile)
+			);
+		}
+
+		/*
+		|--------------------------------------------------------------------------
+		| New Model + Migration
+		|--------------------------------------------------------------------------
+		|
+		| When --new-model (-M) is used, generate the model file and its
+		| migration. The model is also used as the reference model in
+		| stubs unless --model (-m) is explicitly provided.
+		|
+		*/
+
+		$createModel = $this->option('new-model');
+
+		if ($createModel) {
+			// Generate model file
+			$this->writeFile(
+				app_path("Models/{$namespaceModel}.php"),
+				$this->buildStub('model.stub', $replace, $profile)
+			);
+
+			// Generate migration
+			$this->call('make:migration', [
+				'name' => 'create_'
+					. Str::snake(Str::pluralStudly($classModel))
+					. '_table',
+			]);
+
+			$this->info("Model [{$namespaceModel}] created with migration.");
+		}
+
+		/*
+		|--------------------------------------------------------------------------
+		| Routes
+		|--------------------------------------------------------------------------
+		|
+		| Auto-append route entries into routes/auth.php
+		|
+		*/
+
+		$this->appendRoutesToAuth(
+			$namespaceController,
+			$classController,
+			$variableController,
+			$variableModel
 		);
 
-		$this->writeFile(
-			"{$viewPath}/show.blade.php",
-			$this->buildStub('views/show.stub', [
-				'class' => $class,
-				'variable' => Str::camel($class),
-			])
-		);
+		$this->info('Resource generated successfully.');
 
-		$this->writeFile(
-			"{$viewPath}/_form.blade.php",
-			$this->buildStub('views/_form.stub', [
-				'class' => $class,
-			])
-		);
-
-		$this->writeFile(
-			"{$viewPath}/_js.blade.php",
-			$this->buildStub('views/_js.stub', [
-				'class' => $class,
-				'modelVariable' => Str::camel($class),
-				'viewVariable' => Str::kebab($class),
-			])
-		);
-
-		/* JS Files */
-		$this->writeFile(
-			"{$modulePath}/index.js",
-			$this->buildStub('js/index.stub', [
-				'class' => $class,
-				'variable' => Str::camel($class),
-			])
-		);
-
-		$this->writeFile(
-			"{$modulePath}/show.js",
-			$this->buildStub('js/show.stub', [
-				'class' => $class,
-				'variable' => Str::camel($class),
-			])
-		);
-
-		$this->writeFile(
-			"{$modulePath}/form.js",
-			$this->buildStub('js/form.stub', [
-				'class' => $class,
-			])
-		);
-
+		return self::SUCCESS;
 	}
+
+
+
+
+
+
+
 
 	protected function className($name)
 	{
 		return class_basename($name);
 	}
 
-	protected function folder($name)
-	{
-		return explode('\\', $name)[0];
-	}
+	protected function buildStub(
+		string $stub,
+		array $replace,
+		string $profile = 'resource'
+	): string {
 
-	protected function buildStub(string $stub, array $replace): string
-	{
 		$content = file_get_contents(
-			base_path("stubs/module/resource/{$stub}")
+			base_path("stubs/module/{$profile}/{$stub}")
 		);
 
 		foreach ($replace as $key => $value) {
 			$content = str_replace(
 				"{{ {$key} }}",
-				$value,
+				$value ?? '',
 				$content
 			);
 		}
-
 		return $content;
 	}
 
@@ -274,5 +305,53 @@ class MakeModule extends Command
 		}
 
 		file_put_contents($path, $content);
+	}
+
+	protected function appendRoutesToAuth(
+		string $namespaceController,
+		string $classController,
+		string $variableController,
+		string $variableModel
+	): void {
+
+		$path = base_path('routes/auth.php');
+		$content = file_get_contents($path);
+
+		$controllerMarker = '// all controller here';
+		$routeMarker = '// insert your normal page route here';
+
+		$routes = PHP_EOL;
+		$routes .= "\tRoute::resources([" . PHP_EOL;
+		$routes .= "\t\t'{$variableController}' => {$classController}Controller::class," . PHP_EOL;
+		$routes .= "\t]);" . PHP_EOL;
+		$routes .= PHP_EOL;
+		$routes .= "// \tRoute::controller({$classController}Controller::class)->group(function(){" . PHP_EOL;
+		$routes .= "// \t\tRoute::prefix('{$variableController}')->name('{$variableController}.')->group(function(){" . PHP_EOL;
+		$routes .= "// \t\t\tRoute::get('/', 'index')->name('index');" . PHP_EOL;
+		$routes .= "// \t\t\tRoute::get('/', 'create')->name('create');" . PHP_EOL;
+		$routes .= "// \t\t\tRoute::get('/', 'store')->name('store');" . PHP_EOL;
+		$routes .= "// \t\t\tRoute::get('/{{$variableController}}', 'show')->name('show');" . PHP_EOL;
+		$routes .= "// \t\t\tRoute::get('/{{$variableController}}/edit', 'edit')->name('edit');" . PHP_EOL;
+		$routes .= "// \t\t\tRoute::patch('/{{$variableController}}', 'update')->name('update');" . PHP_EOL;
+		$routes .= "// \t\t\tRoute::delete('/{{$variableController}}', 'destroy')->name('destroy');" . PHP_EOL;
+		$routes .= "// \t\t});" . PHP_EOL;
+		$routes .= "// \t});" . PHP_EOL;
+		$routes .= PHP_EOL;
+
+		if (! str_contains($content, $routeMarker)) {
+			$this->warn("Marker [{$routeMarker}] not found in routes/auth.php. Skipping route append.");
+			return;
+		}
+		if (! str_contains($content, $controllerMarker)) {
+			$this->warn("Marker [{$controllerMarker}] not found in routes/auth.php. Skipping route append.");
+			return;
+		}
+
+		$content = str_replace($controllerMarker, $controllerMarker . PHP_EOL . "\t{$namespaceController}Controller," . PHP_EOL, $content);
+		$content = str_replace($routeMarker, $routeMarker . $routes, $content);
+
+		file_put_contents($path, $content);
+
+		$this->info('Routes appended to [routes/auth.php].');
 	}
 }
